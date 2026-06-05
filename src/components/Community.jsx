@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, MessageCircle, Send, Trash2 } from 'lucide-react';
 
-const STORAGE_KEY = 'serenify_posts';
+const API_URL = 'https://api.restful-api.dev/objects/ff8081819d82fab6019e966a64cb40b9';
 
 const SEED_POSTS = [
   {
@@ -42,28 +42,55 @@ const timeAgo = (ts) => {
 };
 
 /**
- * Sección de comunidad con posts persistentes en localStorage.
- * Permite publicar mensajes, dar likes y comentar — visible en todos los
- * dispositivos que compartan el mismo navegador/almacenamiento.
+ * Sección de comunidad con sincronización EN TIEMPO REAL.
+ * Utiliza una API global gratuita para compartir los datos entre todos los dispositivos.
  */
 const Community = ({ userName }) => {
-  const [posts, setPosts] = useState(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : SEED_POSTS;
-    } catch {
-      return SEED_POSTS;
-    }
-  });
+  const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  const [newPost, setNewPost] = useState('');
+  const [activeComment, setActiveComment] = useState(null);
+  const [commentText, setCommentText] = useState('');
 
-  const [newPost, setNewPost]           = useState('');
-  const [activeComment, setActiveComment] = useState(null);  // id del post con input abierto
-  const [commentText, setCommentText]   = useState('');
-
-  // Persiste cambios en localStorage
+  // Sincronización en tiempo real (Polling)
   useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(posts)); } catch {}
-  }, [posts]);
+    const fetchPosts = async () => {
+      try {
+        const res = await fetch(API_URL);
+        const json = await res.json();
+        
+        // Si la base de datos está vacía, la llenamos con las semillas
+        if (!json.data?.posts || json.data.posts.length === 0) {
+          syncWithServer(SEED_POSTS);
+          setPosts(SEED_POSTS);
+        } else {
+          setPosts(json.data.posts);
+        }
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Error conectando al servidor:", err);
+        setIsLoading(false);
+      }
+    };
+
+    fetchPosts();
+    // Polling cada 3 segundos para dar efecto de "Tiempo real" en Vercel
+    const interval = setInterval(fetchPosts, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const syncWithServer = async (newPostsData) => {
+    try {
+      await fetch(API_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'serenify_posts_v1', data: { posts: newPostsData } })
+      });
+    } catch (err) {
+      console.error('Error sincronizando:', err);
+    }
+  };
 
   /* ---- Acciones ---- */
   const addPost = (e) => {
@@ -78,41 +105,51 @@ const Community = ({ userName }) => {
       comments: [],
       createdAt: Date.now(),
     };
-    setPosts(p => [post, ...p]);
+    const updated = [post, ...posts];
+    setPosts(updated); // Actualización optimista
+    syncWithServer(updated);
     setNewPost('');
   };
 
   const toggleLike = (id) => {
-    setPosts(p => p.map(post =>
+    const updated = posts.map(post =>
       post.id !== id ? post : {
         ...post,
         likes: post.likedByUser ? post.likes - 1 : post.likes + 1,
         likedByUser: !post.likedByUser,
       }
-    ));
+    );
+    setPosts(updated);
+    syncWithServer(updated);
   };
 
   const addComment = (e, postId) => {
     e.preventDefault();
     if (!commentText.trim()) return;
     const comment = { id: `c-${Date.now()}`, user: userName || 'Tú', text: commentText.trim() };
-    setPosts(p => p.map(post =>
+    const updated = posts.map(post =>
       post.id !== postId ? post : { ...post, comments: [...post.comments, comment] }
-    ));
+    );
+    setPosts(updated);
+    syncWithServer(updated);
     setCommentText('');
     setActiveComment(null);
   };
 
   const deletePost = (id) => {
-    setPosts(p => p.filter(post => post.id !== id));
+    const updated = posts.filter(post => post.id !== id);
+    setPosts(updated);
+    syncWithServer(updated);
   };
 
   return (
     <div>
-      {/* Cabecera */}
-      <header className="page-header">
-        <h2>Comunidad de Apoyo</h2>
-        <p>Comparte tu experiencia y acompaña a otros en su camino.</p>
+      <header className="page-header flex justify-between items-start">
+        <div>
+          <h2>Comunidad Global</h2>
+          <p>Conectado en tiempo real con todos los dispositivos 🌍</p>
+        </div>
+        {isLoading && <span style={{ fontSize: '0.8rem', color: 'var(--primary-mint)' }}>Conectando...</span>}
       </header>
 
       {/* Formulario de publicación */}
@@ -130,19 +167,16 @@ const Community = ({ userName }) => {
               maxLength={280}
             />
           </div>
-          <button type="submit" className="btn btn-primary btn-sm" disabled={!newPost.trim()}>
+          <button type="submit" className="btn btn-primary btn-sm" disabled={!newPost.trim() || isLoading}>
             <Send size={16} />
             Publicar
           </button>
         </form>
-        {newPost && (
-          <p className="text-xs text-muted mt-2 text-right">{newPost.length}/280</p>
-        )}
       </div>
 
       {/* Lista de posts */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {posts.length === 0 && (
+        {posts.length === 0 && !isLoading && (
           <p className="text-muted text-center" style={{ padding: '2rem 0' }}>
             Sé el primero en compartir algo 💬
           </p>
@@ -204,7 +238,7 @@ const Community = ({ userName }) => {
             </div>
 
             {/* Comentarios existentes */}
-            {post.comments.length > 0 && (
+            {post.comments && post.comments.length > 0 && (
               <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {post.comments.map(c => (
                   <div key={c.id} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
