@@ -1,75 +1,135 @@
 import React, { useState } from 'react';
-import { Star, Calendar, CheckCircle } from 'lucide-react';
+import { Star, Calendar, X } from 'lucide-react';
 import { therapistsData } from '../data/mockData';
+import Toast from './Toast';
 
+/**
+ * Directorio de terapeutas con modal de agendamiento de cita con fecha y hora.
+ */
 const TherapistsDirectory = () => {
-  const [scheduledTherapist, setScheduledTherapist] = useState(null);
+  const [modal, setModal] = useState(null);   // { id, name } del terapeuta seleccionado
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
+  const [toast, setToast] = useState(null);
 
-  const handleSchedule = (name) => {
-    setScheduledTherapist(name);
-    setTimeout(() => setScheduledTherapist(null), 3000);
+  // Fecha mínima = hoy
+  const today = new Date().toISOString().split('T')[0];
+
+  const handleOpenModal = (therapist) => {
+    setModal(therapist);
+    setDate('');
+    setTime('');
+  };
+
+  const handleConfirm = (e) => {
+    e.preventDefault();
+    const formattedDate = new Date(date + 'T12:00:00').toLocaleDateString('es-ES', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+    setToast({
+      title: '¡Sesión Agendada! 🎉',
+      message: `Cita con ${modal.name} el ${formattedDate} a las ${time}.`
+    });
+    setModal(null);
   };
 
   return (
     <div className="therapists-directory">
-      <header className="mb-10">
-        <h2 className="text-3xl font-bold text-main">Encuentra a tu profesional ideal</h2>
-        <p className="text-muted mt-2 font-medium">Nuestros especialistas están aquí para acompañarte.</p>
-      </header>
+      {/* Toast */}
+      {toast && <Toast title={toast.title} message={toast.message} onClose={() => setToast(null)} />}
 
-      {/* Success Notification Modal / Toast */}
-      {scheduledTherapist && (
-        <div style={{
-          position: 'fixed', top: '20px', right: '20px', zIndex: 1000,
-          background: 'var(--primary-mint)', color: 'white',
-          padding: '1rem 1.5rem', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-          display: 'flex', alignItems: 'center', gap: '1rem',
-          animation: 'fadeIn 0.3s ease-in-out'
-        }}>
-          <CheckCircle size={24} />
-          <div>
-            <h4 className="font-bold">¡Sesión Agendada!</h4>
-            <p className="text-sm">Tu cita con {scheduledTherapist} ha sido confirmada.</p>
+      {/* Modal de agendamiento */}
+      {modal && (
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setModal(null)}>
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>Agendar con {modal.name}</h3>
+              <button className="modal-close" onClick={() => setModal(null)} aria-label="Cerrar">
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleConfirm} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div>
+                <label className="form-label">📅 Fecha de la cita</label>
+                <input
+                  className="form-input"
+                  type="date"
+                  min={today}
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <label className="form-label">🕐 Hora de la cita</label>
+                <select
+                  className="form-input"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  required
+                  style={{ cursor: 'pointer' }}
+                >
+                  <option value="">Selecciona un horario...</option>
+                  {['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'].map(t => (
+                    <option key={t} value={t}>{t} hs</option>
+                  ))}
+                </select>
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+                <button type="button" className="btn btn-outline flex-1" onClick={() => setModal(null)}>
+                  Cancelar
+                </button>
+                <button type="submit" className="btn btn-mint flex-1" disabled={!date || !time}>
+                  <Calendar size={16} />
+                  Confirmar
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
 
+      {/* Cabecera */}
+      <header className="page-header">
+        <h2>Nuestros Especialistas</h2>
+        <p>Encuentra al profesional ideal para acompañarte.</p>
+      </header>
+
+      {/* Tarjetas */}
       <div className="grid-cards">
-        {therapistsData.map((therapist) => (
-          <div key={therapist.id} className="glass-card flex flex-col h-full">
-            <div className="flex items-center gap-4 mb-4">
-              <div 
-                className="avatar" 
-                style={{
-                  width: '64px', height: '64px', borderRadius: '18px',
-                  background: 'var(--primary-purple)', color: 'white',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '1.5rem', fontWeight: 'bold'
-                }}
-              >
-                {therapist.name.split(' ').map(n => n[0]).slice(0, 2).join('').replace('.', '')}
+        {therapistsData.map((t) => (
+          <div key={t.id} className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {/* Info del terapeuta */}
+            <div className="flex items-center gap-3">
+              <div className="therapist-avatar">
+                {t.name.split(' ').filter(n => n !== 'Dra.' && n !== 'Lic.').slice(0, 2).map(n => n[0]).join('')}
               </div>
               <div>
-                <h3 className="font-bold text-lg text-main">{therapist.name}</h3>
-                <p className="text-sm text-purple font-semibold">{therapist.specialty}</p>
+                <h3 className="font-bold text-main">{t.name}</h3>
+                <p className="text-sm text-purple font-semibold">{t.specialty}</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 mb-4 text-sm text-muted">
-              <Star size={16} fill="#F59E0B" color="#F59E0B" />
-              <span className="font-bold text-main">{therapist.rating}</span>
-              <span>({therapist.reviews} reseñas)</span>
+            {/* Rating */}
+            <div className="flex items-center gap-2">
+              <Star size={14} fill="#F59E0B" color="#F59E0B" />
+              <span className="font-bold text-sm text-main">{t.rating}</span>
+              <span className="text-sm text-muted">({t.reviews} reseñas)</span>
             </div>
 
-            <p className="text-muted text-sm flex-1 mb-6 italic">
-              "{therapist.description}"
+            {/* Descripción */}
+            <p className="text-sm text-muted italic" style={{ flexGrow: 1 }}>
+              "{t.description}"
             </p>
 
-            <button 
-              className="btn btn-mint w-full mt-auto"
-              onClick={() => handleSchedule(therapist.name)}
+            {/* Botón */}
+            <button
+              className="btn btn-mint w-full"
+              onClick={() => handleOpenModal(t)}
             >
-              <Calendar size={18} />
+              <Calendar size={16} />
               Agendar Sesión
             </button>
           </div>

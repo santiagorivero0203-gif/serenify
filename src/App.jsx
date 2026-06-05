@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Sidebar from './components/Sidebar';
+import Sidebar, { BottomNav } from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import TherapistsDirectory from './components/TherapistsDirectory';
 import MeditationSession from './components/MeditationSession';
@@ -15,6 +15,11 @@ function App() {
     return <Welcome onComplete={setUserName} />;
   }
 
+  const handleLogout = () => {
+    setUserName('');
+    setActiveTab('dashboard');
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
@@ -24,7 +29,7 @@ function App() {
       case 'meditation':
         return <MeditationSession />;
       case 'community':
-        return <Community />;
+        return <Community userName={userName} />;
       default:
         return <Dashboard setActiveTab={setActiveTab} userName={userName} />;
     }
@@ -32,23 +37,18 @@ function App() {
 
   return (
     <div className="app-container">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      {/* Sidebar for Desktop */}
+      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} onLogout={handleLogout} />
       
+      {/* Main Content Area */}
       <main className="main-content">
-        <div style={{
-          animation: 'fadeIn 0.3s ease-in-out',
-          height: '100%'
-        }}>
+        <div style={{ animation: 'fadeIn 0.3s ease-out', maxWidth: '100%' }}>
           {renderContent()}
         </div>
       </main>
 
-      <style dangerouslySetInnerHTML={{__html: `
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}} />
+      {/* Bottom Nav for Mobile */}
+      <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
     </div>
   );
 }

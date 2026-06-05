@@ -1,95 +1,56 @@
 import React, { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
+import Logo from './Logo';
 
+/**
+ * Pantalla inicial de bienvenida y registro de nombre del usuario.
+ */
 const Welcome = ({ onComplete }) => {
   const [name, setName] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (name.trim()) {
-      onComplete(name.trim());
-    }
+    if (name.trim()) onComplete(name.trim());
   };
 
-  const Logo = () => (
-    <div style={{
-      width: '64px',
-      height: '64px',
-      borderRadius: '50%',
-      backgroundColor: '#9867F0', // Light purple outer circle
-      position: 'relative',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      boxShadow: '0 4px 15px rgba(152, 103, 240, 0.4)'
-    }}>
-      <div style={{
-        position: 'absolute',
-        width: '38px',
-        height: '38px',
-        borderRadius: '50%',
-        backgroundColor: '#4A2B78', // Dark purple inner
-        left: '6px'
-      }}></div>
-      <div style={{
-        position: 'absolute',
-        width: '38px',
-        height: '38px',
-        borderRadius: '50%',
-        backgroundColor: '#44D0A4', // Mint green inner
-        right: '6px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        mixBlendMode: 'normal',
-        opacity: 0.95
-      }}>
-        <span style={{
-          color: 'white',
-          fontFamily: 'Inter, sans-serif',
-          fontWeight: 'bold',
-          fontSize: '24px',
-          marginLeft: '1px'
-        }}>S</span>
-      </div>
-    </div>
-  );
-
   return (
-    <div className="flex items-center justify-center min-h-screen" style={{ padding: '2rem' }}>
-      <div className="glass-card" style={{ maxWidth: '400px', width: '100%', padding: '3rem 2rem', textAlign: 'center' }}>
-        <div className="flex justify-center mb-6">
-          <Logo />
+    <div className="welcome-screen">
+      <div className="welcome-card">
+        {/* Logo */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
+          <Logo size={64} />
         </div>
-        
-        <h2 className="text-2xl font-bold mb-2">Bienvenido a Serenify</h2>
-        <p className="text-muted mb-8">Para brindarte una experiencia personalizada, ¿cómo te llamas?</p>
-        
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <input 
-            type="text" 
-            placeholder="Tu nombre..." 
+
+        <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-main)' }}>
+          Serenify
+        </h1>
+        <p className="text-muted" style={{ marginBottom: '2rem', fontSize: '0.95rem' }}>
+          Tu espacio personal para el bienestar mental. ¿Cómo te llamas?
+        </p>
+
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <input
+            className="form-input"
+            type="text"
+            placeholder="Escribe tu nombre..."
             value={name}
             onChange={(e) => setName(e.target.value)}
             autoFocus
-            style={{
-              width: '100%',
-              padding: '1rem',
-              borderRadius: '12px',
-              border: '1px solid var(--border-color)',
-              background: 'rgba(255, 255, 255, 0.5)',
-              fontSize: '1rem',
-              fontFamily: 'Inter, sans-serif',
-              outline: 'none',
-              transition: 'border-color 0.2s'
-            }}
-            onFocus={(e) => e.target.style.borderColor = 'var(--primary-purple)'}
-            onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
+            maxLength={40}
           />
-          <button type="submit" className="btn btn-primary w-full" disabled={!name.trim()}>
+          <button
+            type="submit"
+            className="btn btn-primary w-full"
+            disabled={!name.trim()}
+            style={{ justifyContent: 'center', padding: '0.9rem' }}
+          >
             Comenzar <ArrowRight size={18} />
           </button>
         </form>
+
+        <p style={{ marginTop: '1.5rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+          Tu información no se comparte con nadie 🔒
+        </p>
       </div>
     </div>
   );

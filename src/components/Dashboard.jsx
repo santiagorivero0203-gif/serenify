@@ -1,86 +1,120 @@
-import React from 'react';
-import { Activity, Clock, Zap, Play } from 'lucide-react';
+import React, { useState } from 'react';
+import { Activity, Clock, Zap, Play, Plus } from 'lucide-react';
+import Toast from './Toast';
 
+/**
+ * Dashboard principal del usuario.
+ * Muestra estadísticas, nivel de estrés y actividad recomendada.
+ */
 const Dashboard = ({ setActiveTab, userName }) => {
+  const [toast, setToast] = useState(null);
+
+  const handleRegisterState = () => {
+    setToast({ title: '¡Estado registrado!', message: 'Gracias por tomarte un momento para ti.' });
+  };
+
   return (
     <div className="dashboard">
-      <header className="mb-10">
-        <h2 className="text-3xl font-bold text-main">
-          Hola, {userName}. ¿Cómo está tu energía hoy?
-        </h2>
-        <p className="text-muted mt-2 font-medium">Aquí tienes un resumen de tu progreso.</p>
+      {/* Toast de confirmación */}
+      {toast && (
+        <Toast
+          title={toast.title}
+          message={toast.message}
+          onClose={() => setToast(null)}
+        />
+      )}
+
+      {/* Cabecera */}
+      <header className="dashboard-header page-header">
+        <div>
+          <h2 className="text-3xl font-bold text-main">
+            Hola, {userName} 👋
+          </h2>
+          <p className="text-muted mt-1">Aquí tienes un resumen de tu progreso de hoy.</p>
+        </div>
+        <button className="btn btn-mint" onClick={handleRegisterState}>
+          <Plus size={18} />
+          Registrar Estado
+        </button>
       </header>
 
-      <div className="grid-cards mb-10">
-        {/* Nivel de Estrés */}
-        <div className="glass-card flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-muted">Nivel de estrés actual</h3>
-            <Activity className="text-mint" size={24} />
+      {/* Tarjetas de estadísticas */}
+      <div className="grid-cards mb-8">
+        {/* Nivel de estrés */}
+        <div className="stat-card flex flex-col" style={{ gap: '1rem' }}>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-semibold text-muted uppercase tracking-wide">Nivel de estrés</span>
+            <Activity size={20} style={{ color: 'var(--primary-mint)' }} />
           </div>
           <div className="flex items-center gap-4">
-            <div style={{ position: 'relative', width: '80px', height: '80px' }}>
-              <svg viewBox="0 0 36 36" style={{ width: '100%', height: '100%' }}>
-                <path
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none" stroke="rgba(80, 211, 163, 0.2)" strokeWidth="3"
-                />
-                <path
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none" stroke="var(--primary-mint)" strokeWidth="3" strokeDasharray="30, 100"
+            {/* Gráfico circular */}
+            <div style={{ position: 'relative', width: 72, height: 72, flexShrink: 0 }}>
+              <svg viewBox="0 0 36 36" style={{ width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="rgba(80,211,163,0.15)" strokeWidth="3" />
+                <circle
+                  cx="18" cy="18" r="15.9"
+                  fill="none" stroke="var(--primary-mint)" strokeWidth="3"
+                  strokeDasharray="30 70" strokeLinecap="round"
+                  style={{ animation: 'fillProgress 1.2s ease-out forwards' }}
                 />
               </svg>
               <div style={{
-                position: 'absolute', top: '50%', left: '50%',
-                transform: 'translate(-50%, -50%)', fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--text-main)'
-              }}>
-                30%
-              </div>
+                position: 'absolute', inset: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-main)'
+              }}>30%</div>
             </div>
             <div>
               <p className="font-bold text-xl text-main">Bajo</p>
-              <p className="text-sm text-muted">Buen trabajo gestionando tu día.</p>
+              <p className="text-sm text-muted">Buen trabajo hoy 🌿</p>
             </div>
           </div>
         </div>
 
-        {/* Minutos de Meditación */}
-        <div className="glass-card flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-muted">Meditación esta semana</h3>
-            <Clock className="text-purple" size={24} />
+        {/* Minutos meditados */}
+        <div className="stat-card flex flex-col" style={{ gap: '1rem' }}>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-semibold text-muted uppercase tracking-wide">Meditación</span>
+            <Clock size={20} style={{ color: 'var(--primary-purple)' }} />
           </div>
-          <div className="flex items-end gap-2 mt-4">
+          <div className="flex items-end gap-2" style={{ marginTop: 'auto' }}>
             <span className="text-4xl font-bold text-main">145</span>
-            <span className="text-muted mb-1 font-medium">minutos</span>
+            <span className="text-muted font-medium" style={{ paddingBottom: '4px' }}>min esta semana</span>
           </div>
         </div>
 
-        {/* Racha de Días */}
-        <div className="glass-card flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-muted">Racha activa</h3>
-            <Zap className="text-mint" size={24} />
+        {/* Racha */}
+        <div className="stat-card flex flex-col" style={{ gap: '1rem' }}>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-semibold text-muted uppercase tracking-wide">Racha activa</span>
+            <Zap size={20} style={{ color: 'var(--primary-mint)' }} />
           </div>
-          <div className="flex items-end gap-2 mt-4">
+          <div className="flex items-end gap-2" style={{ marginTop: 'auto' }}>
             <span className="text-4xl font-bold text-main">5</span>
-            <span className="text-muted mb-1 font-medium">días consecutivos</span>
+            <span className="text-muted font-medium" style={{ paddingBottom: '4px' }}>días seguidos 🔥</span>
           </div>
         </div>
       </div>
 
+      {/* Actividad recomendada */}
       <section>
-        <h3 className="text-2xl font-bold mb-4 text-main">Actividad Recomendada</h3>
-        <div className="glass-card flex items-center justify-between" style={{
-          borderLeft: '6px solid var(--primary-mint)'
-        }}>
-          <div>
-            <h4 className="font-bold text-xl text-main">Respiración profunda (5 min)</h4>
-            <p className="text-muted mt-2">Ideal para reducir el estrés antes de tu próxima reunión.</p>
+        <h3 className="text-xl font-bold text-main mb-4">Actividad Recomendada</h3>
+        <div className="recommended-card">
+          <div style={{ flex: 1 }}>
+            <span style={{
+              display: 'inline-block', background: 'rgba(80,211,163,0.12)', color: 'var(--primary-mint-hover)',
+              borderRadius: 99, padding: '0.2rem 0.75rem', fontSize: '0.75rem', fontWeight: 600, marginBottom: '0.5rem'
+            }}>
+              ✨ Recomendado para ti
+            </span>
+            <h4 className="font-bold text-lg text-main">Respiración profunda — 5 min</h4>
+            <p className="text-muted text-sm mt-1">
+              Ideal para reducir el estrés antes de tu próxima reunión.
+            </p>
           </div>
           <button className="btn btn-primary" onClick={() => setActiveTab('meditation')}>
-            <Play size={18} fill="white" />
-            Iniciar Sesión
+            <Play size={16} fill="white" />
+            Iniciar
           </button>
         </div>
       </section>
