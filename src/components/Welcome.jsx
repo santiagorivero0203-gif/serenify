@@ -11,24 +11,55 @@ const Welcome = ({ onComplete }) => {
     }
   };
 
+  const Logo = () => (
+    <div style={{
+      width: '64px',
+      height: '64px',
+      borderRadius: '50%',
+      backgroundColor: '#9867F0', // Light purple outer circle
+      position: 'relative',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      boxShadow: '0 4px 15px rgba(152, 103, 240, 0.4)'
+    }}>
+      <div style={{
+        position: 'absolute',
+        width: '38px',
+        height: '38px',
+        borderRadius: '50%',
+        backgroundColor: '#4A2B78', // Dark purple inner
+        left: '6px'
+      }}></div>
+      <div style={{
+        position: 'absolute',
+        width: '38px',
+        height: '38px',
+        borderRadius: '50%',
+        backgroundColor: '#44D0A4', // Mint green inner
+        right: '6px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        mixBlendMode: 'normal',
+        opacity: 0.95
+      }}>
+        <span style={{
+          color: 'white',
+          fontFamily: 'Inter, sans-serif',
+          fontWeight: 'bold',
+          fontSize: '24px',
+          marginLeft: '1px'
+        }}>S</span>
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex items-center justify-center min-h-screen" style={{ padding: '2rem' }}>
       <div className="glass-card" style={{ maxWidth: '400px', width: '100%', padding: '3rem 2rem', textAlign: 'center' }}>
         <div className="flex justify-center mb-6">
-          <div style={{ position: 'relative', width: '60px', height: '60px' }}>
-            <div style={{
-              position: 'absolute', width: '48px', height: '48px',
-              borderRadius: '50%', backgroundColor: 'var(--primary-purple)',
-              left: '0', top: '6px', mixBlendMode: 'multiply'
-            }}></div>
-            <div style={{
-              position: 'absolute', width: '48px', height: '48px',
-              borderRadius: '50%', backgroundColor: 'var(--primary-mint)',
-              right: '0', top: '6px', mixBlendMode: 'multiply',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: 'white', fontFamily: 'Inter, sans-serif', fontSize: '24px', fontWeight: 'bold'
-            }}>S</div>
-          </div>
+          <Logo />
         </div>
         
         <h2 className="text-2xl font-bold mb-2">Bienvenido a Serenify</h2>

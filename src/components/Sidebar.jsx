@@ -9,6 +9,50 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
     { id: 'community', label: 'Comunidad', icon: <MessageSquare size={20} /> },
   ];
 
+  const Logo = () => (
+    <div style={{
+      width: '44px',
+      height: '44px',
+      borderRadius: '50%',
+      backgroundColor: '#9867F0', // Light purple outer circle
+      position: 'relative',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      boxShadow: '0 4px 10px rgba(152, 103, 240, 0.3)'
+    }}>
+      <div style={{
+        position: 'absolute',
+        width: '26px',
+        height: '26px',
+        borderRadius: '50%',
+        backgroundColor: '#4A2B78', // Dark purple inner
+        left: '4px'
+      }}></div>
+      <div style={{
+        position: 'absolute',
+        width: '26px',
+        height: '26px',
+        borderRadius: '50%',
+        backgroundColor: '#44D0A4', // Mint green inner
+        right: '4px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        mixBlendMode: 'normal',
+        opacity: 0.95
+      }}>
+        <span style={{
+          color: 'white',
+          fontFamily: 'Inter, sans-serif',
+          fontWeight: 'bold',
+          fontSize: '16px',
+          marginLeft: '1px'
+        }}>S</span>
+      </div>
+    </div>
+  );
+
   return (
     <aside className="glass-card" style={{ 
       width: '260px', 
@@ -22,20 +66,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
     }}>
       <div className="mb-10" style={{ padding: '0 0.5rem' }}>
         <h1 className="text-3xl font-bold text-main" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div style={{ position: 'relative', width: '40px', height: '40px' }}>
-            <div style={{
-              position: 'absolute', width: '32px', height: '32px',
-              borderRadius: '50%', backgroundColor: 'var(--primary-purple)',
-              left: '0', top: '4px', mixBlendMode: 'multiply'
-            }}></div>
-            <div style={{
-              position: 'absolute', width: '32px', height: '32px',
-              borderRadius: '50%', backgroundColor: 'var(--primary-mint)',
-              right: '0', top: '4px', mixBlendMode: 'multiply',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: 'white', fontFamily: 'Inter, sans-serif', fontSize: '18px', fontWeight: 'bold'
-            }}>S</div>
-          </div>
+          <Logo />
           Serenify
         </h1>
       </div>
