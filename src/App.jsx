@@ -3,6 +3,7 @@ import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import TherapistsDirectory from './components/TherapistsDirectory';
 import MeditationSession from './components/MeditationSession';
+import Community from './components/Community';
 import './index.css';
 
 function App() {
@@ -11,13 +12,15 @@ function App() {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <Dashboard />;
+        return <Dashboard setActiveTab={setActiveTab} />;
       case 'therapists':
         return <TherapistsDirectory />;
       case 'meditation':
         return <MeditationSession />;
+      case 'community':
+        return <Community />;
       default:
-        return <Dashboard />;
+        return <Dashboard setActiveTab={setActiveTab} />;
     }
   };
 
@@ -26,7 +29,6 @@ function App() {
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       
       <main className="main-content">
-        {/* Animated container for smooth transitions */}
         <div style={{
           animation: 'fadeIn 0.3s ease-in-out',
           height: '100%'

@@ -2,19 +2,19 @@ import React from 'react';
 import { Activity, Clock, Zap, Play } from 'lucide-react';
 import { mockData } from '../data/mockData';
 
-const Dashboard = () => {
+const Dashboard = ({ setActiveTab }) => {
   const { usuario } = mockData;
 
   return (
     <div className="dashboard">
-      <header className="mb-8">
-        <h2 className="text-2xl font-bold">
+      <header className="mb-10">
+        <h2 className="text-3xl font-bold text-white drop-shadow-md">
           Hola, {usuario.nombre}. ¿Cómo está tu energía hoy?
         </h2>
-        <p className="text-muted mt-2">Aquí tienes un resumen de tu progreso.</p>
+        <p className="text-white mt-2 font-medium opacity-90">Aquí tienes un resumen de tu progreso.</p>
       </header>
 
-      <div className="grid-cards mb-8">
+      <div className="grid-cards mb-10">
         {/* Nivel de Estrés */}
         <div className="glass-card flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
@@ -25,36 +25,23 @@ const Dashboard = () => {
             <div style={{ position: 'relative', width: '80px', height: '80px' }}>
               <svg viewBox="0 0 36 36" style={{ width: '100%', height: '100%' }}>
                 <path
-                  d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none"
-                  stroke="rgba(163, 228, 215, 0.2)"
-                  strokeWidth="3"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none" stroke="rgba(80, 211, 163, 0.2)" strokeWidth="3"
                 />
                 <path
-                  d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none"
-                  stroke="var(--primary-mint)"
-                  strokeWidth="3"
-                  strokeDasharray="30, 100"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none" stroke="var(--primary-mint)" strokeWidth="3" strokeDasharray="30, 100"
                 />
               </svg>
               <div style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                fontWeight: 'bold',
-                fontSize: '1.2rem'
+                position: 'absolute', top: '50%', left: '50%',
+                transform: 'translate(-50%, -50%)', fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--text-main)'
               }}>
                 30%
               </div>
             </div>
             <div>
-              <p className="font-bold text-lg">Bajo</p>
+              <p className="font-bold text-xl text-main">Bajo</p>
               <p className="text-sm text-muted">Buen trabajo gestionando tu día.</p>
             </div>
           </div>
@@ -67,8 +54,8 @@ const Dashboard = () => {
             <Clock className="text-purple" size={24} />
           </div>
           <div className="flex items-end gap-2 mt-4">
-            <span className="text-2xl font-bold">145</span>
-            <span className="text-muted mb-1">minutos</span>
+            <span className="text-4xl font-bold text-main">145</span>
+            <span className="text-muted mb-1 font-medium">minutos</span>
           </div>
         </div>
 
@@ -79,25 +66,25 @@ const Dashboard = () => {
             <Zap className="text-mint" size={24} />
           </div>
           <div className="flex items-end gap-2 mt-4">
-            <span className="text-2xl font-bold">5</span>
-            <span className="text-muted mb-1">días consecutivos</span>
+            <span className="text-4xl font-bold text-main">5</span>
+            <span className="text-muted mb-1 font-medium">días consecutivos</span>
           </div>
         </div>
       </div>
 
       <section>
-        <h3 className="text-xl font-bold mb-4">Actividad Recomendada</h3>
+        <h3 className="text-2xl font-bold mb-4 text-white drop-shadow-md">Actividad Recomendada</h3>
         <div className="glass-card flex items-center justify-between" style={{
-          background: 'linear-gradient(135deg, rgba(163, 228, 215, 0.4) 0%, rgba(255, 255, 255, 0.7) 100%)',
-          borderLeft: '4px solid var(--primary-mint)'
+          background: 'rgba(255, 255, 255, 0.95)',
+          borderLeft: '6px solid var(--primary-mint)'
         }}>
           <div>
-            <h4 className="font-bold text-lg">Respiración profunda (5 min)</h4>
+            <h4 className="font-bold text-xl text-main">Respiración profunda (5 min)</h4>
             <p className="text-muted mt-2">Ideal para reducir el estrés antes de tu próxima reunión.</p>
           </div>
-          <button className="btn btn-primary">
-            <Play size={18} />
-            Iniciar
+          <button className="btn btn-primary" onClick={() => setActiveTab('meditation')}>
+            <Play size={18} fill="white" />
+            Iniciar Sesión
           </button>
         </div>
       </section>
