@@ -28,9 +28,9 @@ const Community = () => {
 
   return (
     <div className="community-section">
-      <header className="mb-8">
-        <h2 className="text-3xl font-bold">Comunidad de Apoyo</h2>
-        <p className="text-muted mt-2">Comparte tus experiencias y conecta con personas en tu mismo viaje.</p>
+      <header className="mb-10">
+        <h2 className="text-3xl font-bold text-main">Comunidad de Apoyo</h2>
+        <p className="text-muted mt-2 font-medium">Comparte tus experiencias y conecta con personas en tu mismo viaje.</p>
       </header>
 
       <div className="flex flex-col gap-4">
@@ -40,10 +40,10 @@ const Community = () => {
             <p className="text-main mb-4">{post.content}</p>
             
             <div className="flex items-center gap-6 text-muted text-sm font-semibold">
-              <button className="flex items-center gap-2 hover:text-purple transition" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+              <button className="flex items-center gap-2 hover:text-purple transition" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}>
                 <Heart size={18} /> {post.likes}
               </button>
-              <button className="flex items-center gap-2 hover:text-purple transition" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+              <button className="flex items-center gap-2 hover:text-purple transition" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}>
                 <MessageCircle size={18} /> {post.comments} respuestas
               </button>
             </div>

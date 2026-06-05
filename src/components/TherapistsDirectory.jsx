@@ -13,16 +13,16 @@ const TherapistsDirectory = () => {
   return (
     <div className="therapists-directory">
       <header className="mb-10">
-        <h2 className="text-3xl font-bold text-white drop-shadow-md">Encuentra a tu profesional ideal</h2>
-        <p className="text-white mt-2 font-medium opacity-90">Nuestros especialistas están aquí para acompañarte.</p>
+        <h2 className="text-3xl font-bold text-main">Encuentra a tu profesional ideal</h2>
+        <p className="text-muted mt-2 font-medium">Nuestros especialistas están aquí para acompañarte.</p>
       </header>
 
       {/* Success Notification Modal / Toast */}
       {scheduledTherapist && (
         <div style={{
           position: 'fixed', top: '20px', right: '20px', zIndex: 1000,
-          background: 'var(--primary-mint)', color: 'var(--text-main)',
-          padding: '1rem 1.5rem', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+          background: 'var(--primary-mint)', color: 'white',
+          padding: '1rem 1.5rem', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
           display: 'flex', alignItems: 'center', gap: '1rem',
           animation: 'fadeIn 0.3s ease-in-out'
         }}>

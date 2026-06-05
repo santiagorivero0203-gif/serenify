@@ -1,22 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Color Palette matching the presentation */
-  --bg-gradient: linear-gradient(135deg, #0A2E61 0%, #4B3386 50%, #A253A3 100%);
-  --bg-card: rgba(255, 255, 255, 0.85); /* Frosted white */
-  --bg-card-hover: rgba(255, 255, 255, 0.95);
+  /* Minimalist Color Palette */
+  --bg-main: #F8F9FA;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-hover: rgba(255, 255, 255, 1);
   --primary-purple: #7B43A1;
-  --primary-purple-hover: #5C3278;
+  --primary-purple-hover: #623681;
   --primary-mint: #50D3A3;
   --primary-mint-hover: #3EAF86;
-  --text-main: #1A202C;
-  --text-muted: #4A5568;
+  --text-main: #2D3748;
+  --text-muted: #718096;
   --text-light: #FFFFFF;
   
   /* Layout */
   --border-radius: 20px;
-  --box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.2);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+  --box-shadow: 0 8px 32px 0 rgba(123, 67, 161, 0.05);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.8);
   --transition: all 0.3s ease;
 }
 
@@ -27,8 +27,11 @@
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
-  background: var(--bg-gradient);
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-main);
+  /* Optional: Very subtle background accent */
+  background-image: radial-gradient(circle at 100% 0%, rgba(80, 211, 163, 0.05) 0%, transparent 40%),
+                    radial-gradient(circle at 0% 100%, rgba(123, 67, 161, 0.05) 0%, transparent 40%);
   background-attachment: fixed;
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
@@ -36,8 +39,8 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Fredoka', sans-serif;
-  letter-spacing: 0.5px;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.5px;
 }
 
 /* Text Colors */
@@ -62,7 +65,7 @@ h1, h2, h3, h4, h5, h6 {
 .glass-card:hover {
   transform: translateY(-4px);
   background: var(--bg-card-hover);
-  box-shadow: 0 15px 50px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 12px 40px 0 rgba(123, 67, 161, 0.08);
 }
 
 /* Buttons */
@@ -78,7 +81,7 @@ h1, h2, h3, h4, h5, h6 {
   transition: var(--transition);
   border: none;
   gap: 0.5rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 .btn-primary {
@@ -89,18 +92,18 @@ h1, h2, h3, h4, h5, h6 {
 .btn-primary:hover {
   background-color: var(--primary-purple-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(123, 67, 161, 0.4);
+  box-shadow: 0 6px 16px rgba(123, 67, 161, 0.2);
 }
 
 .btn-mint {
   background-color: var(--primary-mint);
-  color: var(--text-main);
+  color: white;
 }
 
 .btn-mint:hover {
   background-color: var(--primary-mint-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(80, 211, 163, 0.4);
+  box-shadow: 0 6px 16px rgba(80, 211, 163, 0.2);
 }
 
 .btn-icon {
@@ -174,16 +177,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.02);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary-purple);
+  background: var(--primary-mint);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-mint);
+  background: var(--primary-purple);
 }
 
 @media (max-width: 768px) {

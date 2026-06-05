@@ -4,15 +4,21 @@ import Dashboard from './components/Dashboard';
 import TherapistsDirectory from './components/TherapistsDirectory';
 import MeditationSession from './components/MeditationSession';
 import Community from './components/Community';
+import Welcome from './components/Welcome';
 import './index.css';
 
 function App() {
+  const [userName, setUserName] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard');
+
+  if (!userName) {
+    return <Welcome onComplete={setUserName} />;
+  }
 
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <Dashboard setActiveTab={setActiveTab} />;
+        return <Dashboard setActiveTab={setActiveTab} userName={userName} />;
       case 'therapists':
         return <TherapistsDirectory />;
       case 'meditation':
@@ -20,7 +26,7 @@ function App() {
       case 'community':
         return <Community />;
       default:
-        return <Dashboard setActiveTab={setActiveTab} />;
+        return <Dashboard setActiveTab={setActiveTab} userName={userName} />;
     }
   };
 

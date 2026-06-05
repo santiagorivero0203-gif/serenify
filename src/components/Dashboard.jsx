@@ -1,17 +1,14 @@
 import React from 'react';
 import { Activity, Clock, Zap, Play } from 'lucide-react';
-import { mockData } from '../data/mockData';
 
-const Dashboard = ({ setActiveTab }) => {
-  const { usuario } = mockData;
-
+const Dashboard = ({ setActiveTab, userName }) => {
   return (
     <div className="dashboard">
       <header className="mb-10">
-        <h2 className="text-3xl font-bold text-white drop-shadow-md">
-          Hola, {usuario.nombre}. ¿Cómo está tu energía hoy?
+        <h2 className="text-3xl font-bold text-main">
+          Hola, {userName}. ¿Cómo está tu energía hoy?
         </h2>
-        <p className="text-white mt-2 font-medium opacity-90">Aquí tienes un resumen de tu progreso.</p>
+        <p className="text-muted mt-2 font-medium">Aquí tienes un resumen de tu progreso.</p>
       </header>
 
       <div className="grid-cards mb-10">
@@ -73,9 +70,8 @@ const Dashboard = ({ setActiveTab }) => {
       </div>
 
       <section>
-        <h3 className="text-2xl font-bold mb-4 text-white drop-shadow-md">Actividad Recomendada</h3>
+        <h3 className="text-2xl font-bold mb-4 text-main">Actividad Recomendada</h3>
         <div className="glass-card flex items-center justify-between" style={{
-          background: 'rgba(255, 255, 255, 0.95)',
           borderLeft: '6px solid var(--primary-mint)'
         }}>
           <div>
